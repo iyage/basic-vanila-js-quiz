@@ -5,5 +5,5 @@
 1.  The app rememb ser selected option even after paginating away from it.
 2.  After submission correct options selected are mark with green while wrong options are marked with red, and display on thye score sheet.
 
-<img width='400px' height='400px' align='left' src='./img1.png' >
-<img  width='400px' height='400px' align='right' src='./img2.png'  >
+<img width='350px' height='350px' align='left' src='./img1.png' >
+<img  width='350px' height='350px' align='right' src='./img2.png'  >
