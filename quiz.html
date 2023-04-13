@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=
+    , initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      #container {
+        width: 500px;
+        min-height: 300px;
+        margin: auto;
+        padding: 30px;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+      }
+      .options {
+        margin-bottom: 20px;
+      }
+      .option {
+        display: flex;
+        gap: 20px;
+        padding: 10px;
+      }
+      .quiz {
+        margin-bottom: 5px;
+      }
+      #next {
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      #prev {
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      table,
+      td,
+      th {
+        border: solid 1px;
+        border-collapse: collapse;
+      }
+      tr > td,
+      tr > th {
+        font-size: 12px;
+        font-weight: 300;
+        padding: 5px 10px;
+      }
+      table {
+        margin: 20px 0;
+      }
+      #restart {
+        float: right;
+        padding: 2px 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h3 style="text-align: center; margin: 150px 0 10px 0">Basic Quiz</h3>
+    <div id="container">
+      <div id="score-sheet">
+        <button id="restart" onclick="reload()">Restart</button>
+        <p id="score"></p>
+        <div style="display: flex; justify-content: center">
+          <table>
+            <thead>
+              <tr>
+                <th colspan="3">Score sheet</th>
+              </tr>
+              <tr>
+                <th>Quesstion Nos.</th>
+                <th>Selected</th>
+                <th>Answer</th>
+              </tr>
+            </thead>
+            <tbody id="correct_choice"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="question">
+        <div id="quizContaier"></div>
+        <div class="btn-container">
+          <button id="prev" onclick="changePage('prev')">Prev</button>
+          <button id="next" onclick="changePage('next')">Next</button>
+          <button id="next" onclick="submit()">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const quizs = [
+        {
+          question: "2 + 3 = _______",
+          options: [1, 3, 5, 2],
+          ans: 5,
+          choice: "",
+        },
+        {
+          question: "2 * 8 =  _______",
+          options: [4, 16, 9, 10],
+          ans: 16,
+          choice: "",
+        },
+        {
+          question: "10 * 8 = _______",
+          options: [4, 16, 9, 80],
+          ans: 80,
+          choice: "",
+        },
+        {
+          question: "8 /  2 = _______",
+          options: [4, 16, 9, 10],
+          ans: 4,
+          choice: "",
+        },
+        {
+          question: "32 /  2 = _______",
+          options: [4, 16, 9, 10],
+          ans: 16,
+          choice: "",
+        },
+      ];
+
+      /**
+       * variable declaration
+       */
+      let currentPage = 0;
+      let correctAns = 0;
+      let correctChoice = [];
+
+      //Load quiz
+      load_quizs();
+
+      //funcction to reload quiz after submition
+      function reload() {
+        document.location.reload();
+      }
+
+      //funcction to submit quiz
+      function submit() {
+        /**
+         * hide and clear question and score sheet
+         */
+        document.getElementById("question").style.display = "none";
+        document.querySelector("#score").innerHTML = "";
+        document.querySelector("#correct_choice").innerHTML = "";
+        quizs.forEach((quiz, index) => {
+          correctChoice.push({
+            ques: index + 1,
+            choice: quiz.choice,
+            ans: quiz.ans,
+          });
+          if (quiz.choice == quiz.ans) {
+            correctAns += 1;
+          }
+        });
+
+        document.querySelector(
+          "#score"
+        ).innerHTML = `${correctAns}/${quizs.length}`;
+        for (let i = 0; i < correctChoice.length; i++) {
+          let tr = document.createElement("tr");
+          let col1 = document.createElement("td");
+          let col2 = document.createElement("td");
+          let col3 = document.createElement("td");
+          col2.style.color = "white";
+          col1.innerText = correctChoice[i].ques;
+          correctChoice[i].choice == correctChoice[i].ans
+            ? (col2.style.backgroundColor = "green")
+            : (col2.style.backgroundColor = "red");
+          col2.innerText = correctChoice[i].choice;
+          col3.innerText = correctChoice[i].ans;
+          tr.append(col1);
+          tr.append(col2);
+          tr.append(col3);
+          document.querySelector("#correct_choice").append(tr);
+        }
+      }
+
+      function changePage(val) {
+        document.querySelector("#next").removeAttribute("disabled");
+        document.querySelector("#prev").removeAttribute("disabled");
+        if (val === "prev" && currentPage > 0) {
+          document.querySelector("#quizContaier").innerHTML = "";
+          currentPage -= 1;
+          if (currentPage == 0) {
+            document.querySelector("#prev").setAttribute("disabled", true);
+          }
+          load_quizs();
+        }
+        if (val === "next" && currentPage < quizs.length - 1) {
+          document.querySelector("#quizContaier").innerHTML = "";
+          currentPage += 1;
+          if (currentPage == quizs.length - 1) {
+            document.querySelector("#next").setAttribute("disabled", true);
+          }
+          load_quizs();
+        }
+      }
+
+      function selectOption(id, option) {
+        quizs.forEach((quiz, index) => {
+          if (index == id) {
+            quiz.choice = option;
+            if (option == quiz.ans) {
+              correctChoice.push;
+            }
+          }
+        });
+      }
+
+      function load_quizs() {
+        quizs.forEach((quiz, index) => {
+          if (currentPage === index) {
+            let quizContainer = document.createElement("p");
+
+            let optionsContainer = document.createElement("p");
+            optionsContainer.className = "options";
+            quizContainer.className = "quiz";
+            quizContainer.innerHTML = quiz.question;
+            let ul = document.createElement("ul");
+            quiz.options.forEach((option) => {
+              let optionContainer = document.createElement("input");
+              let label = document.createElement("label");
+              optionContainer.setAttribute("type", "radio");
+              optionContainer.setAttribute("name", index);
+              optionContainer.value = option;
+              if (optionContainer.value == quiz.choice) {
+                optionContainer.checked = true;
+              }
+              optionContainer.onchange = () => {
+                selectOption(index, optionContainer.value);
+              };
+
+              let li = document.createElement("li");
+              li.className = "option";
+              label.innerHTML = option;
+              li.append(optionContainer);
+              li.append(label);
+              ul.append(li);
+            });
+            document.querySelector("#quizContaier").append(quizContainer);
+            document.querySelector("#quizContaier").append(ul);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
